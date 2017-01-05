@@ -15,12 +15,12 @@ const Edge = (key, label, start, end, props) => Map({
   props: fromJS(props)
 })
 
-export const newEmptyGraph = () => Map({
+const newEmptyGraph = () => Map({
   nodes: Map(),
   edges: Map()
 })
 
-export const Graph = (g) => {
+const Graph = (g) => {
 
   let _graph = g || newEmptyGraph()
 
@@ -183,3 +183,5 @@ export const Graph = (g) => {
   }
 
 }
+
+export default Graph

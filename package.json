@@ -1,13 +1,25 @@
 {
-  "name": "graphjs",
+  "name": "trvjs",
   "version": "1.0.0",
-  "description": "",
-  "main": "graph.js",
+  "description": "Store and traverse directed property graphs, with a Gremlin-like API",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hippoai/trvjs.git"
+  },
+  "keywords": [
+    "graph",
+    "traversal"
+  ],
+  "author": "hippoai",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hippoai/trvjs/issues"
+  },
+  "homepage": "https://github.com/hippoai/trvjs#readme",
   "dependencies": {
     "immutable": "^3.8.1"
   }

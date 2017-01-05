@@ -33,7 +33,7 @@ const Step = (nodeKey, edgeKey) => {
   }
 }
 
-export const Trv = ({g, path = [], starts = []}) => {
+const Trv = ({g, path = [], starts = []}) => {
 
   let _graph = g
   let _result = newResult(_graph, starts)
@@ -282,3 +282,5 @@ export const Trv = ({g, path = [], starts = []}) => {
   }
 
 }
+
+export default Trv
