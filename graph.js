@@ -22,7 +22,7 @@ export const newEmptyGraph = () => Map({
 
 export const Graph = (g) => {
 
-  let _graph = g
+  let _graph = g || newEmptyGraph()
 
   // hasNode
   const hasNode = (key) => _graph.hasIn(['nodes', key])
@@ -33,12 +33,13 @@ export const Graph = (g) => {
   // getNodeProp
   const getNodeProp = (key, prop) => _graph.getIn(['nodes', key, 'props', prop])
 
+  const _mergeNode = (g, key, props) => g.hasIn(['nodes', key])
+      ? g.mergeIn(['nodes', key, 'props'], props)
+      : g.setIn(['nodes', key], Node(key, props))
+
   // mergeNode
   function mergeNode(key, props){
-    const g = hasNode(key)
-      ? _graph.mergeIn(['nodes', key, 'props'], props)
-      : _graph.setIn(['nodes', key], Node(key, props))
-    return Graph(g)
+    return Graph(_mergeNode(_graph, key, props))
   }
 
   // hasEdge
@@ -51,17 +52,21 @@ export const Graph = (g) => {
   const getEdgeProp = (key, prop) => _graph
     .getIn(['edges', key, 'props', prop])
 
-  // mergeEdge
-  function mergeEdge(key, props, label, start, end){
-    const g1 = hasEdge(key)
-      ? _graph.mergeIn(['edges', key, 'props'], props)
-      : _graph.setIn(['edges', key], Edge(key, label, start, end, props))
+  const _mergeEdge = (g, key, props, label, start, end) => {
+    const g1 = g.hasIn(['edges', key])
+      ? g.mergeIn(['edges', key, 'props'], props)
+      : g.setIn(['edges', key], Edge(key, label, start, end, props))
 
     const g2 = g1
       .setIn(['nodes', start, 'out', key], label)
       .setIn(['nodes', end, 'in', key], label)
 
-    return Graph(g2)
+    return g2
+  }
+
+  // mergeEdge
+  function mergeEdge(key, props, label, start, end){
+    return Graph(_mergeEdge(_graph, key, props, label, start, end))
   }
 
   // inEKeys
@@ -136,6 +141,34 @@ export const Graph = (g) => {
     return getNode(edge.get('end'))
   }
 
+  // merge
+  function merge({nodes, edges}){
+
+    const g1 = Object.keys(nodes).reduce(
+      (acc, nodeKey) => {
+        const node = nodes[nodeKey]
+        return _mergeNode(acc, nodeKey, node['props'])
+      },
+      _graph
+    )
+
+    const g2 = Object.keys(edges).reduce(
+      (acc, edgeKey) => {
+        const edge = edges[edgeKey]
+
+        return _mergeEdge(
+          acc, edgeKey,
+          edge['props'], edge['label'],
+          edge['start'], edge['end']
+        )
+      },
+      g1
+    )
+
+    return Graph(g2)
+
+  }
+
   // return
   const graph = () => {
     return g
@@ -144,6 +177,7 @@ export const Graph = (g) => {
   return {
     hasNode, getNode, getNodeProp, mergeNode,
     hasEdge, getEdge, getEdgeProp, mergeEdge,
+    merge,
     inEKeys, outEKeys, inE, outE, hopKey, hop, startN, endN,
     graph
   }
