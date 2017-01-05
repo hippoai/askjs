@@ -15,61 +15,136 @@ const Edge = (key, label, start, end, props) => Map({
   props: fromJS(props)
 })
 
-export const Graph = ({nodes = Map(), edges = Map()}) => {
+export const newEmptyGraph = () => Map({
+  nodes: Map(),
+  edges: Map()
+})
 
-  let _nodes = nodes
-  let _edges = edges
+export const Graph = (g) => {
+
+  let _graph = g
 
   // hasNode
-  const hasNode = (key) => _nodes.has(key)
+  const hasNode = (key) => _graph.hasIn(['nodes', key])
 
   // getNode
-  const getNode = (key) => _nodes.get(key)
+  const getNode = (key) => _graph.getIn(['nodes', key])
 
   // getNodeProp
-  const getNodeProp = (key, prop) => _nodes.getIn([key, 'props', prop])
+  const getNodeProp = (key, prop) => _graph.getIn(['nodes', key, 'props', prop])
 
   // mergeNode
   function mergeNode(key, props){
-    _nodes = _nodes.has(key)
-      ? _nodes.mergeIn([key, 'props'], props)
-      : _nodes.set(key, Node(key, props))
-    return this
+    const g = hasNode(key)
+      ? _graph.mergeIn(['nodes', key, 'props'], props)
+      : _graph.setIn(['nodes', key], Node(key, props))
+    return Graph(g)
   }
 
   // hasEdge
-  const hasEdge = (key) => _edges.has(key)
+  const hasEdge = (key) => _graph.hasIn(['edges', key])
 
   // getEdge
-  const getEdge = (key) => _edges.get(key)
+  const getEdge = (key) => _graph.getIn(['edges', key])
 
   // getEdgeProp
-  const getEdgeProp = (key, prop) => _edges.getIn([key, 'props', prop])
+  const getEdgeProp = (key, prop) => _graph
+    .getIn(['edges', key, 'props', prop])
 
   // mergeEdge
   function mergeEdge(key, props, label, start, end){
-    _edges = _edges.has(key)
-      ? _edges.mergeIn([key, 'props'], props)
-      : _edges.set(key, Edge(key, label, start, end, props))
+    const g1 = hasEdge(key)
+      ? _graph.mergeIn(['edges', key, 'props'], props)
+      : _graph.setIn(['edges', key], Edge(key, label, start, end, props))
 
-    _nodes = _nodes
-      .setIn([start, 'out', key], label)
-      .setIn([end, 'in', key], label)
+    const g2 = g1
+      .setIn(['nodes', start, 'out', key], label)
+      .setIn(['nodes', end, 'in', key], label)
 
-    return this
+    return Graph(g2)
+  }
+
+  // inEKeys
+  const inEKeys = (nodeKey, label) => {
+    return _graph.getIn(['nodes', nodeKey, 'in'])
+      .filter(
+        (edgeLabel, edgeKey) => (edgeLabel === label) && hasEdge(edgeKey)
+      )
+  }
+
+  // inE
+  const inE = (nodeKey, label) => {
+    return inEKeys(nodeKey, label)
+      .map((edgeLabel, edgeKey) => getEdge(edgeKey))
+  }
+
+  // outEKeys
+  const outEKeys = (nodeKey, label) => {
+    return _graph.getIn(['nodes', nodeKey, 'out'])
+      .filter(
+        (edgeLabel, edgeKey) => (edgeLabel === label) && hasEdge(edgeKey)
+      )
+  }
+
+  // outE
+  const outE = (nodeKey, label) => {
+    return outEKeys(nodeKey, label)
+      .map((edgeLabel, edgeKey) => getEdge(edgeKey))
+  }
+
+  // hop
+  const hopKey = (edgeKey, nodeKey) => {
+    if(!hasEdge(edgeKey)){
+      return undefined
+    }
+
+    const edge = getEdge(edgeKey)
+    return edge.get('start') === nodeKey
+      ? edge.get('end')
+      : edge.get('start')
+  }
+
+  // hop
+  const hop = (edgeKey, nodeKey) => {
+    if(!hasEdge(edgeKey)){
+      return undefined
+    }
+
+    const edge = getEdge(edgeKey)
+    return edge.get('start') === nodeKey
+      ? getNode(edge.get('end'))
+      : getNode(edge.get('start'))
+  }
+
+  // startN
+  const startN = (edgeKey) => {
+    if(!hasEdge(edgeKey)){
+      return undefined
+    }
+    const edge = getEdge(edgeKey)
+
+    return getNode(edge.get('start'))
+  }
+
+  // endN
+  const endN = (edgeKey) => {
+    if(!hasEdge(edgeKey)){
+      return undefined
+    }
+    const edge = getEdge(edgeKey)
+
+    return getNode(edge.get('end'))
   }
 
   // return
   const graph = () => {
-    return {
-      nodes: _nodes,
-      edges: _edges
-    }
+    return g
   }
 
   return {
     hasNode, getNode, getNodeProp, mergeNode,
     hasEdge, getEdge, getEdgeProp, mergeEdge,
+    inEKeys, outEKeys, inE, outE, hopKey, hop, startN, endN,
     graph
   }
 
