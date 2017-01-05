@@ -1,5 +1,4 @@
-import { fromJS } from 'immutable'
-import { Graph } from './graph'
+import { fromJS, Map } from 'immutable'
 
 const KEY_SEPARATOR = '::'
 
@@ -17,7 +16,7 @@ const newResult = (graph, starts) => starts
     (acc, nodeKey) => graph.hasNode(nodeKey)
       ? acc.set(nodeKey, graph.getNode(nodeKey))
       : acc,
-    fromJS({})
+    Map()
   )
 
 // renameKey
@@ -38,9 +37,9 @@ export const Trv = ({g, path = [], starts = []}) => {
 
   let _graph = g
   let _result = newResult(_graph, starts)
-  let _cache = fromJS({})
+  let _cache = Map()
   let _path = (path.length > 0) ? path : newPath(starts)
-  let _trvs = fromJS({})
+  let _trvs = Map()
   let _isDeep = false
   let _errors = []
 
@@ -150,7 +149,7 @@ export const Trv = ({g, path = [], starts = []}) => {
       })
     })
 
-    _trvs = fromJS({})
+    _trvs = Map()
     _isDeep = false
 
     return this
@@ -204,8 +203,8 @@ export const Trv = ({g, path = [], starts = []}) => {
       return this
     }
 
-    let newResult = fromJS({})
-    let newPath = fromJS({})
+    let newResult = Map()
+    let newPath = Map()
 
     _result.forEach((aNode, aNodeKey) => {
 
