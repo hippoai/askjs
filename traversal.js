@@ -39,7 +39,7 @@ export const Trv = ({g, path = [], starts = []}) => {
   let _result = newResult(_graph, starts)
   let _cache = Map()
   let _path = (path.length > 0) ? path : newPath(starts)
-  let _trvs = Map()
+  let _trvs = {}
   let _isDeep = false
   let _errors = []
 
@@ -55,17 +55,27 @@ export const Trv = ({g, path = [], starts = []}) => {
   // cache
   const cache = () => _cache
 
+  // graph
+  const graph = () => _graph
+
+  // errors
+  const errors = () => _errors
+
   // isVeryDeep
   const isVeryDeep = () => {
     if(!_isDeep){
       return false
     }
 
-    if(_trvs.size === 0){
+    if(Object.keys(_trvs).length === 0){
       return false
     }
 
-    return _trvs.first().isDeep()
+    for(let trvKey in _trvs){
+      return _trvs[trvKey].isDeep()
+    }
+
+    return false
   }
 
   // _addError
@@ -76,7 +86,9 @@ export const Trv = ({g, path = [], starts = []}) => {
   // shallowSave
   function shallowSave(...keys) {
     if(_isDeep){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.shallowSave(...keys))
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].shallowSave(...keys)
+      }
       return this
     }
 
@@ -101,11 +113,14 @@ export const Trv = ({g, path = [], starts = []}) => {
     }
 
     if(isVeryDeep()){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.deepSave(name))
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].deepSave(name)
+      }
       return this
     }
 
-    _trvs.forEach((nestedTrv, nodeKey) => {
+    Object.keys(_trvs).forEach((nodeKey) => {
+      const nestedTrv = _trvs[nodeKey]
       _cache = _cache.setIn([nodeKey, name], nestedTrv.cache())
     })
 
@@ -115,7 +130,9 @@ export const Trv = ({g, path = [], starts = []}) => {
   // deepen
   function deepen() {
     if(_isDeep){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.deepen())
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].deepen()
+      }
       return this
     }
 
@@ -125,7 +142,7 @@ export const Trv = ({g, path = [], starts = []}) => {
       trvs[nodeKey] = Trv({g: _graph, path: _path, starts: [nodeKey]})
     })
 
-    _trvs = fromJS(trvs)
+    _trvs = trvs
     _isDeep = true
 
     return this
@@ -138,18 +155,21 @@ export const Trv = ({g, path = [], starts = []}) => {
     }
 
     if(isVeryDeep()){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.flatten())
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].flatten()
+      }
       return this
     }
 
     _errors = []
-    _trvs.forEach((nestedTrv) => {
+    Object.keys(_trvs).forEach((nodeKey) => {
+      const nestedTrv = _trvs[nodeKey]
       nestedTrv.errors().forEach((err) => {
         _errors.push(err)
       })
     })
 
-    _trvs = Map()
+    _trvs = {}
     _isDeep = false
 
     return this
@@ -159,7 +179,9 @@ export const Trv = ({g, path = [], starts = []}) => {
   function shallowFilter(predicate){
 
     if (_isDeep){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.shallowFilter(predicate))
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].shallowFilter(predicate)
+      }
       return this
     }
 
@@ -176,12 +198,15 @@ export const Trv = ({g, path = [], starts = []}) => {
     }
 
     if(isVeryDeep()){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.deepFilter(keepQuery))
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].deepFilter(keepQuery)
+      }
       return this
     }
 
     let nodesToDiscard = []
-    _trvs.forEach((nestedTrv, nodeKey) => {
+    Object.keys(_trvs).forEach((nodeKey) => {
+      const nestedTrv = _trvs[nodeKey]
       if(!keepQuery(nestedTrv, _path.get(nodeKey))){
         nodesToDiscard.push(nodeKey)
       }
@@ -189,9 +214,8 @@ export const Trv = ({g, path = [], starts = []}) => {
 
     nodesToDiscard.forEach((nodeKey) => {
       _result = _result.delete(nodeKey)
-      _trvs = _trvs.delete(nodeKey)
+      delete _trvs[nodeKey]
     })
-
     return this
   }
 
@@ -199,7 +223,9 @@ export const Trv = ({g, path = [], starts = []}) => {
   function hop(getIncomingNodes, label, rememberPath){
 
     if(_isDeep){
-      _trvs = _trvs.map((nestedTrv) => nestedTrv.hop(getIncomingNodes, label, rememberPath))
+      for(let trvKey in _trvs){
+        _trvs[trvKey] = _trvs[trvKey].hop(getIncomingNodes, label, rememberPath)
+      }
       return this
     }
 
@@ -250,7 +276,7 @@ export const Trv = ({g, path = [], starts = []}) => {
 
   // public api
   return {
-    isDeep, size, result, cache, isVeryDeep,
+    isDeep, size, result, cache, graph, errors, isVeryDeep,
     shallowSave, deepSave, deepen, flatten,
     shallowFilter, deepFilter, hop, inV, outV
   }
