@@ -30,7 +30,7 @@ export const Graph = ({nodes = Map(), edges = Map()}) => {
   const getNodeProp = (key, prop) => _nodes.getIn([key, 'props', prop])
 
   // mergeNode
-  const mergeNode = (key, props) => {
+  function mergeNode(key, props){
     _nodes = _nodes.has(key)
       ? _nodes.mergeIn([key, 'props'], props)
       : _nodes.set(key, Node(key, props))
@@ -47,23 +47,20 @@ export const Graph = ({nodes = Map(), edges = Map()}) => {
   const getEdgeProp = (key, prop) => _edges.getIn([key, 'props', prop])
 
   // mergeEdge
-  const mergeEdge = (key, props, label, start, end) => {
-    if(_edges.has(key)){
-      _edges = _edges.mergeIn([key, 'props'], props)
-      _nodes = _nodes
-        .setIn([start, 'out', key], label)
-        .setIn([end, 'in', key], label)
-    }else{
-      _edges = _edges.mergeIn([key, 'props'], props)
-      _nodes = _nodes
-        .setIn([start, 'out', key], label)
-        .setIn([end, 'in', key], label)
-    }
+  function mergeEdge(key, props, label, start, end){
+    _edges = _edges.has(key)
+      ? _edges.mergeIn([key, 'props'], props)
+      : _edges.set(key, Edge(key, label, start, end, props))
+
+    _nodes = _nodes
+      .setIn([start, 'out', key], label)
+      .setIn([end, 'in', key], label)
+
     return this
   }
 
   // return
-  const return = () => {
+  const graph = () => {
     return {
       nodes: _nodes,
       edges: _edges
@@ -72,7 +69,8 @@ export const Graph = ({nodes = Map(), edges = Map()}) => {
 
   return {
     hasNode, getNode, getNodeProp, mergeNode,
-    hasEdge, getEdge, getEdgeProp, mergeEdge
+    hasEdge, getEdge, getEdgeProp, mergeEdge,
+    graph
   }
 
 }
