@@ -1,10 +1,14 @@
 const webpack = require('webpack');
 
+const libraryName = 'askjs';
+
 module.exports = {
   entry: './src/index.js',
   output: {
     path: './lib',
-    filename: 'askjs.bundle.js'
+    filename: 'askjs.bundle.js',
+    libraryTarget: 'umd',
+    library: libraryName
   },
   module: {
     loaders: [{

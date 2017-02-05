@@ -1,4 +1,9 @@
-export { default as Graph } from './graph'
-export { default as Trv } from './traversal'
+import Graph from './graph'
+import Trv from './traversal'
 
- 
+
+
+module.exports = {
+  Graph: Graph,
+  Trv: Trv
+}
