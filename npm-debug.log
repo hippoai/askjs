@@ -1,0 +1,105 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'publish' ]
+2 info using npm@3.7.5
+3 info using node@v4.3.1
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/somedude/hippoai/askjs',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/somedude/.npm/askjs/0.0.1/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/somedude/.npm correctMkdir not in flight; initializing
+10 info lifecycle askjs@0.0.1~prepublish: askjs@0.0.1
+11 silly lifecycle askjs@0.0.1~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/somedude/.npm/askjs/0.0.1/package.tgz',
+12 verbose tar pack   '/Users/somedude/hippoai/askjs' ]
+13 verbose tarball /Users/somedude/.npm/askjs/0.0.1/package.tgz
+14 verbose folder /Users/somedude/hippoai/askjs
+15 verbose addLocalTarball adding from inside cache /Users/somedude/.npm/askjs/0.0.1/package.tgz
+16 verbose correctMkdir /Users/somedude/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd askjs@0.0.1
+18 verbose afterAdd /Users/somedude/.npm/askjs/0.0.1/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/somedude/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/somedude/.npm/askjs/0.0.1/package/package.json written
+21 silly publish { name: 'askjs',
+21 silly publish   version: '0.0.1',
+21 silly publish   description: 'Query a local graph',
+21 silly publish   main: 'lib/askjs.bundle.js',
+21 silly publish   directories: { test: 'test' },
+21 silly publish   scripts:
+21 silly publish    { test: 'echo "Error: no test specified" && exit 1',
+21 silly publish      build: 'webpack' },
+21 silly publish   repository: { type: 'git', url: 'git+https://github.com/hippoai/askjs.git' },
+21 silly publish   keywords: [ 'graph', 'query' ],
+21 silly publish   author: { name: 'Selim Youssry' },
+21 silly publish   license: 'ISC',
+21 silly publish   bugs: { url: 'https://github.com/hippoai/askjs/issues' },
+21 silly publish   homepage: 'https://github.com/hippoai/askjs#readme',
+21 silly publish   devDependencies:
+21 silly publish    { 'babel-cli': '^6.22.2',
+21 silly publish      'babel-core': '^6.22.1',
+21 silly publish      'babel-preset-es2015': '^6.22.0',
+21 silly publish      webpack: '^2.2.1' },
+21 silly publish   dependencies: { 'babel-polyfill': '^6.22.0', immutable: '^3.8.1' },
+21 silly publish   readme: '# Directed property graph storage and traversal\n\nWith a Gremlin-like API, create and traverse your directed property graphs.\n\nThis is fully compatible with [GraphGo](https://github.com/hippoai/graphgo.git) and follows the traversal implementation in [AskGo](https://github.com/hippoai/askgo.git)\n\n\n## How to use\n\nCheck the examples folder (coming soon).\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: '874d035673feb1a6d2689c4266be9dfdc6210304',
+21 silly publish   _id: 'askjs@0.0.1',
+21 silly publish   _shasum: '9550f44605ffeae9230ee4cc8e6afaebda604565',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name askjs
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry uri https://registry.npmjs.org/askjs
+27 verbose publish registryBase https://registry.npmjs.org/
+28 silly publish uploading /Users/somedude/.npm/askjs/0.0.1/package.tgz
+29 verbose request uri https://registry.npmjs.org/askjs
+30 verbose request sending authorization for write operation
+31 info attempt registry request try #1 at 3:34:01 PM
+32 verbose request using bearer token for auth
+33 verbose request id f41ab29696b25b36
+34 http request PUT https://registry.npmjs.org/askjs
+35 http 403 https://registry.npmjs.org/askjs
+36 verbose headers { 'content-type': 'application/json',
+36 verbose headers   'cache-control': 'max-age=300',
+36 verbose headers   'content-length': '95',
+36 verbose headers   'accept-ranges': 'bytes',
+36 verbose headers   date: 'Sun, 05 Feb 2017 20:34:01 GMT',
+36 verbose headers   via: '1.1 varnish',
+36 verbose headers   connection: 'keep-alive',
+36 verbose headers   'x-served-by': 'cache-jfk8135-JFK',
+36 verbose headers   'x-cache': 'MISS',
+36 verbose headers   'x-cache-hits': '0',
+36 verbose headers   'x-timer': 'S1486326841.220518,VS0,VE563',
+36 verbose headers   vary: 'Accept-Encoding' }
+37 verbose request invalidating /Users/somedude/.npm/registry.npmjs.org/askjs on PUT
+38 error publish Failed PUT 403
+39 verbose stack Error: "You cannot publish over the previously published version 0.0.1." : askjs
+39 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+39 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+39 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+39 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:199:22)
+39 verbose stack     at emitTwo (events.js:87:13)
+39 verbose stack     at Request.emit (events.js:172:7)
+39 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+39 verbose stack     at emitOne (events.js:82:20)
+39 verbose stack     at Request.emit (events.js:169:7)
+39 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:963:12)
+40 verbose statusCode 403
+41 verbose pkgid askjs
+42 verbose cwd /Users/somedude/hippoai/askjs
+43 error Darwin 14.5.0
+44 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "publish"
+45 error node v4.3.1
+46 error npm  v3.7.5
+47 error code E403
+48 error "You cannot publish over the previously published version 0.0.1." : askjs
+49 error If you need help, you may report this error at:
+49 error     <https://github.com/npm/npm/issues>
+50 verbose exit [ 1, true ]

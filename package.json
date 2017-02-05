@@ -1,13 +1,14 @@
 {
   "name": "askjs",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "Query a local graph",
   "main": "lib/askjs.bundle.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
