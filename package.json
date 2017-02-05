@@ -1,26 +1,35 @@
 {
-  "name": "trvjs",
-  "version": "1.0.0",
-  "description": "Store and traverse directed property graphs, with a Gremlin-like API",
-  "main": "index.js",
+  "name": "askjs",
+  "version": "0.0.1",
+  "description": "Query a local graph",
+  "main": "lib/askjs.bundle.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hippoai/trvjs.git"
+    "url": "git+https://github.com/hippoai/askjs.git"
   },
   "keywords": [
     "graph",
-    "traversal"
+    "query"
   ],
-  "author": "hippoai",
+  "author": "Selim Youssry",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hippoai/trvjs/issues"
+    "url": "https://github.com/hippoai/askjs/issues"
   },
-  "homepage": "https://github.com/hippoai/trvjs#readme",
+  "homepage": "https://github.com/hippoai/askjs#readme",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-preset-es2015": "^6.22.0",
+    "webpack": "^2.2.1"
+  },
   "dependencies": {
+    "babel-polyfill": "^6.22.0",
     "immutable": "^3.8.1"
   }
 }
