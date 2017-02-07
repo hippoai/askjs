@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "test": "./node_modules/mocha/bin/mocha",
+    "build": "./node_modules/webpack/bin/webpack.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "babel-cli": "^6.22.2",
     "babel-core": "^6.22.1",
     "babel-preset-es2015": "^6.22.0",
+    "imgraphjs": "0.0.2",
     "webpack": "^2.2.1"
   },
   "dependencies": {

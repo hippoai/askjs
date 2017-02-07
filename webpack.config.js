@@ -6,9 +6,10 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: './lib',
-    filename: 'askjs.bundle.js',
+    filename: libraryName + '.bundle.js',
     libraryTarget: 'umd',
-    library: libraryName
+    library: libraryName,
+    umdNamedDefine: true
   },
   module: {
     loaders: [{

@@ -1,9 +1,6 @@
-import Graph from './graph'
 import Trv from './traversal'
+import { hasResult, isInValues } from './filters'
 
-
-
-module.exports = {
-  Graph: Graph,
-  Trv: Trv
+export {
+  Trv
 }
