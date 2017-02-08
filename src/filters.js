@@ -1,4 +1,6 @@
-const hasResult = (trv, path) => trv.size() > 0
+const hasResult = (trv, path) => {
+  return trv.size() > 0
+}
 
 const isInValues = (key, ...values) => {
   return (node, path) => {

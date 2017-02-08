@@ -32,6 +32,9 @@ const Trv = ({g, path = [], starts = []}) => {
   // graph
   const graph = () => _graph
 
+  // traversals
+  const trvs = () => _trvs
+
   // errors
   const errors = () => _errors
 
@@ -46,7 +49,7 @@ const Trv = ({g, path = [], starts = []}) => {
       return false
     }
 
-    for(let trvKey of _trvs){
+    for(let trvKey in _trvs){
       return _trvs[trvKey].isDeep()
     }
 
@@ -63,7 +66,7 @@ const Trv = ({g, path = [], starts = []}) => {
 
     // if deep, apply to traversal children
     if(_isDeep){
-      for(let trvKey of _trvs){
+      for(let trvKey in _trvs){
         _trvs[trvKey] = _trvs[trvKey].shallowSave(...keys)
       }
       return this
@@ -78,7 +81,7 @@ const Trv = ({g, path = [], starts = []}) => {
       }
 
       // Now save every key we can find among keys
-      for(let key of keys){
+      keys.forEach((key) => {
         const {oldKey, newKey} = renameKey(key)
         const value = _graph.getNodeProp(nodeKey, oldKey)
         if(value !== undefined){
@@ -86,7 +89,7 @@ const Trv = ({g, path = [], starts = []}) => {
         }else{
           _addError(errNodePropNotFound(nodeKey, oldKey))
         }
-      }
+      })
     })
 
     return this
@@ -98,7 +101,7 @@ const Trv = ({g, path = [], starts = []}) => {
     // Deep calls
     // if deep, apply to traversal children
     if(_isDeep){
-      for(let trvKey of _trvs){
+      for(let trvKey in _trvs){
         _trvs[trvKey] = _trvs[trvKey].shallowSaveF(f)
       }
       return this
@@ -168,8 +171,8 @@ const Trv = ({g, path = [], starts = []}) => {
 
     // If N > 1 then deepen next level
     if(_isDeep){
-      for(let trvKey of _trvs){
-        _trvs[trvKey] = _trvs[trvKey].deepen()
+      for(let trvKey in _trvs){
+        _trvs[trvKey].deepen()
       }
       return this
     }
@@ -183,6 +186,7 @@ const Trv = ({g, path = [], starts = []}) => {
     _trvs = trvs
     _isDeep = true
 
+
     return this
   }
 
@@ -195,8 +199,8 @@ const Trv = ({g, path = [], starts = []}) => {
     }
 
     if(isVeryDeep()){
-      for(let trvKey of _trvs){
-        _trvs[trvKey] = _trvs[trvKey].flatten()
+      for(let trvKey in _trvs){
+        _trvs[trvKey].flatten()
       }
       return this
     }
@@ -219,7 +223,7 @@ const Trv = ({g, path = [], starts = []}) => {
 
     // Only filter the last step
     if (_isDeep){
-      for(let trvKey of _trvs){
+      for(let trvKey in _trvs){
         _trvs[trvKey] = _trvs[trvKey].shallowFilter(predicate)
       }
       return this
@@ -242,8 +246,8 @@ const Trv = ({g, path = [], starts = []}) => {
 
     // Only filter on N-1 level
     if(isVeryDeep()){
-      for(let trvKey of _trvs){
-        _trvs[trvKey] = _trvs[trvKey].deepFilter(keepQuery)
+      for(let trvKey in _trvs){
+        _trvs[trvKey].deepFilter(keepQuery)
       }
       return this
     }
@@ -256,6 +260,7 @@ const Trv = ({g, path = [], starts = []}) => {
         nodesToDiscard.push(nodeKey)
       }
     })
+
 
     // Remove these nodes from the traversal
     nodesToDiscard.forEach((nodeKey) => {
@@ -270,7 +275,7 @@ const Trv = ({g, path = [], starts = []}) => {
 
     // hop on the outermost layer
     if(_isDeep){
-      for(let trvKey of _trvs){
+      for(let trvKey in _trvs){
         _trvs[trvKey] = _trvs[trvKey].hop(getIncomingNodes, label, rememberPath)
       }
       return this
@@ -323,11 +328,45 @@ const Trv = ({g, path = [], starts = []}) => {
     return this
   }
 
+  function logCache(other){
+    if(other){
+      console.log(other)
+    }
+    console.log(_cache.toJS())
+    return this
+  }
+
+  function logResult(other){
+    if(other){
+      console.log(other)
+    }
+    console.log(_buildResultLog(this).toJS())
+
+    return this
+  }
+
+  const _buildResultLog = (trv) => {
+    if(!trv.isDeep()) {
+      return trv.result().reduce(
+        (acc, v, nodeKey) => acc.set(nodeKey, ""),
+        Map()
+      )
+    }
+
+    const _thisTrvs = trv.trvs()
+
+    return Object.keys(_thisTrvs).reduce(
+      (acc, nodeKey) => acc.set(nodeKey, _buildResultLog(_thisTrvs[nodeKey])),
+      Map()
+    )
+  }
+
   // public api
   return {
-    isDeep, size, result, cache, graph, errors, isVeryDeep,
+    isDeep, size, result, cache, graph, trvs, errors, isVeryDeep,
     shallowSave, shallowSaveF, deepSave, deepen, flatten,
-    shallowFilter, deepFilter, hop, inV, outV
+    shallowFilter, deepFilter, hop, inV, outV,
+    logCache, logResult
   }
 
 }
