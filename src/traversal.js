@@ -135,7 +135,8 @@ const Trv = ({g, path = [], starts = []}) => {
   // deepSave
   // will save the children's shallowly saved data at the parent level
   // it is applied on level N-1 (where N is total depth)
-  function deepSave(name) {
+  // if simplify is true and there is only one nestedTrv, we'll pop it's cache
+  function deepSave(name, simplify) {
 
     // It has to be deep to be used
     if(!_isDeep){
@@ -150,6 +151,7 @@ const Trv = ({g, path = [], starts = []}) => {
       return this
     }
 
+
     // Actual deepSave function, when we are at the right level
     Object.keys(_trvs).forEach((nodeKey) => {
       const nestedTrv = _trvs[nodeKey]
@@ -159,7 +161,11 @@ const Trv = ({g, path = [], starts = []}) => {
         _cache.set(nodeKey, Map())
       }
 
-      _cache = _cache.setIn([nodeKey, name], nestedTrv.cache())
+      _cache = _cache.setIn([nodeKey, name],
+        (simplify && nestedTrv.size() === 1)
+        ? nestedTrv.cache().first()
+        : nestedTrv.cache()
+      )
     })
 
     return this
