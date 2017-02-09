@@ -38,7 +38,7 @@ const r = traversal
   .deepFilter(hasResult)
   .shallowSave('name::fatherName')
   .shallowSave('inexistantField')
-  .deepSave('father')
+  .deepSave('father', true)
   .flatten()
   .shallowSave('name')
 
@@ -48,12 +48,14 @@ describe('Big traversal', () => {
 
   const _cache = r.cache()
 
+  console.log(_cache.toJS())
+
   it('should find three nodes', () => {
     should(_cache.size).equal(3)
   })
 
   it('should find clara\'s father', () => {
-    should(_cache.getIn(['person.clara', 'father', 'person.tim', 'fatherName'])).equal('Tim')
+    should(_cache.getIn(['person.clara', 'father', 'fatherName'])).equal('Tim')
   })
 
 })
