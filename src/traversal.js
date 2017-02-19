@@ -146,7 +146,7 @@ const Trv = ({g, path = [], starts = []}) => {
     // One level higher if N > 2
     if(isVeryDeep()){
       for(let trvKey of _trvs){
-        _trvs[trvKey] = _trvs[trvKey].deepSave(name)
+        _trvs[trvKey] = _trvs[trvKey].deepSave(name, simplify)
       }
       return this
     }
@@ -166,6 +166,38 @@ const Trv = ({g, path = [], starts = []}) => {
         ? nestedTrv.cache().first()
         : nestedTrv.cache()
       )
+    })
+
+    return this
+  }
+
+  // deepSave function of the nested cache
+  function deepSaveF(name, f) {
+
+    // It has to be deep to be used
+    if(!_isDeep){
+      return this
+    }
+
+    // One level higher if N > 2
+    if(isVeryDeep()){
+      for(let trvKey of _trvs){
+        _trvs[trvKey] = _trvs[trvKey].deepSaveF(name, f, simplify)
+      }
+      return this
+    }
+
+
+    // Actual deepSave function, when we are at the right level
+    Object.keys(_trvs).forEach((nodeKey) => {
+      const nestedTrv = _trvs[nodeKey]
+
+      // Create the cache entry for this node
+      if(!_cache.has(nodeKey)){
+        _cache.set(nodeKey, Map())
+      }
+
+      _cache = _cache.setIn([nodeKey, name], f(nestedTrv))
     })
 
     return this
@@ -370,7 +402,7 @@ const Trv = ({g, path = [], starts = []}) => {
   // public api
   return {
     isDeep, size, result, cache, graph, trvs, errors, isVeryDeep,
-    shallowSave, shallowSaveF, deepSave, deepen, flatten,
+    shallowSave, shallowSaveF, deepSave, deepSaveF, deepen, flatten,
     shallowFilter, deepFilter, hop, inV, outV,
     logCache, logResult
   }
