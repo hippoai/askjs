@@ -1,6 +1,6 @@
 {
   "name": "askjs",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Query a local graph",
   "main": "lib/askjs.bundle.js",
   "directories": {
