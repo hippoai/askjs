@@ -39,6 +39,7 @@ const r = traversal
   .shallowSave('name::fatherName')
   .shallowSave('inexistantField')
   .deepSave('father', true)
+  .deepSaveF('nFathers', (trv) => trv.size())
   .flatten()
   .shallowSave('name')
 
@@ -56,6 +57,10 @@ describe('Big traversal', () => {
 
   it('should find clara\'s father', () => {
     should(_cache.getIn(['person.clara', 'father', 'fatherName'])).equal('Tim')
+  })
+
+  it('should only have one father', () => {
+    should(_cache.getIn(['person.clara', 'nFathers'])).equal(1)
   })
 
 })
